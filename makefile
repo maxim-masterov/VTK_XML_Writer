@@ -12,7 +12,7 @@ INCL = -I../FancyBear/FancyBear/
 SYMBOLS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L
 
 # Library name
-LIBNAME = libxmlwriter.a
+LIBNAME = libxml_writer.a
 
 # List of source files
 SRCS = \

@@ -34,6 +34,9 @@ int main() {
     // or
 //    my_xml.TestUnstructuredOutput();
 
+//    long data;
+//    std::cout << "My type: " << my_xml.CheckDataType(data) << "\n";
+
 	return 0;
 }
 

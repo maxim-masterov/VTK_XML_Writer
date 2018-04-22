@@ -36,13 +36,13 @@ inline bool VTK_XML_Writer::IsLittleEndian() {
 template<typename Stream>
 inline void VTK_XML_Writer::OpenSection(std::string str, Stream &stream) {
     str = indentation + "<" + str + ">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
 template<typename Stream>
 inline void VTK_XML_Writer::CloseSection(std::string str, Stream &stream) {
-    indentation.erase(indentation.length() - 2);
+    //indentation.erase(indentation.length() - 2);
     str = indentation + "</" + str + ">\n";
     stream << str;
 }
@@ -56,7 +56,7 @@ inline void VTK_XML_Writer::OpenDataArrSection(const std::string type, const std
     str = indentation + "<DataArray type=\"" + type + "\" Name=\"" + name
             + "\" NumberOfComponents=\"" + std::to_string(num_of_comp) + "\" format=\"" + format
             + "\" offset=\"" + std::to_string(offset) + "\"" + ">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
@@ -68,7 +68,7 @@ inline void VTK_XML_Writer::OpenDataArrSection(const std::string type, const std
     str = indentation + "<DataArray type=\"" + type + "\" Name=\"" + name
             + "\" NumberOfComponents=\"" + std::to_string(num_of_comp) + "\" format=\"" + format
             + "\"" + ">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
@@ -82,7 +82,7 @@ inline void VTK_XML_Writer::OpenVTKSection(const std::string type, Stream &strea
     std::string str;
     str = indentation + "<VTKFile type=\"" + type + "\" version=\"" + vtk_version
             + "\" byte_order=\"" + byte_order + "\">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
@@ -96,7 +96,7 @@ inline void VTK_XML_Writer::OpenPieceSection(const size_t num_points, const size
     std::string str;
     str = indentation + "<Piece NumberOfPoints=\"" + std::to_string(num_points)
             + "\" NumberOfCells=\"" + std::to_string(num_cells) + "\">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
@@ -109,7 +109,7 @@ template<typename Stream>
 inline void VTK_XML_Writer::OpenPointDataSection(const std::string name, Stream &stream) {
     std::string str;
     str = indentation + "<PointData Scalars=\"" + name + "\">\n";
-    indentation.append(2, ' ');
+    //indentation.append(2, ' ');
     stream << str;
 }
 
@@ -152,7 +152,13 @@ inline void VTK_XML_Writer::AppendData(Data &data, Stream &stream) {
 template<typename Data>
 inline size_t VTK_XML_Writer::CountOffset(Data &data) {
     const size_t size = data.size();
-    return sizeof(data[0]) * size;
+    return sizeof(data.at(0)) * size;
+}
+
+template<typename Data>
+inline size_t VTK_XML_Writer::CountOffsetGrid(Data &data) {
+    const size_t size = data.size();
+    return sizeof(data.at(0).x) * size;
 }
 
 inline void VTK_XML_Writer::SetXMLVersion(const std::string _version) {
@@ -161,6 +167,53 @@ inline void VTK_XML_Writer::SetXMLVersion(const std::string _version) {
 
 inline void VTK_XML_Writer::SetVTKVersion(const std::string _version) {
     vtk_version = _version;
+}
+
+template <typename T>
+inline std::string VTK_XML_Writer::CheckDataType(const T data) {
+
+    // Types supported by VTK
+    //    Int8, UInt8, Int16, UInt16, Int32,
+    //    UInt32, Int64, UInt64, Float32, Float64
+
+    std::string type;
+
+    if ( typeid(data).name() == typeid(float).name() ) {
+        type = "Float32";
+    }
+    if ( typeid(data).name() == typeid(double).name() ) {
+        type = "Float64";
+    }
+    if ( typeid(data).name() == typeid(int).name() ) {
+        type = "Int32";
+    }
+    if ( typeid(data).name() == typeid(uint8_t).name() ) {
+        type = "UInt8";
+    }
+    if ( typeid(data).name() == typeid(uint16_t).name() ) {
+        type = "UInt16";
+    }
+    if ( typeid(data).name() == typeid(uint32_t).name() ) {
+        type = "UInt32";
+    }
+    if ( typeid(data).name() == typeid(size_t).name() ) {
+        if (sizeof(size_t) == 8)
+            type = "UInt64";
+        if (sizeof(size_t) == 4)
+            type = "UInt32";
+    }
+    if ( typeid(data).name() == typeid(long).name() ) {
+        if (sizeof(long) == 8)
+            type = "UInt64";
+        if (sizeof(long) == 4)
+            type = "UInt32";
+    }
+
+    if (type.empty())
+        std::cerr << "Error! Unknown data type : " << typeid(data).name() << " of size of "
+                << sizeof(data) << " Bytes. See " << __FILE__ << ":" << __LINE__ << "\n";
+
+    return type;
 }
 
 }

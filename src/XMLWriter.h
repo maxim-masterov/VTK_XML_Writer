@@ -28,6 +28,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <typeinfo>
 
 namespace xmlw {
 
@@ -91,6 +92,13 @@ public:
      * \brief Writes down file with a structured grid in raw binary mode
      */
     void TestUntructuredOutput();
+
+    /*!
+     * \brief Returns string of a data type for VTK format
+     * \warning One should provide one raw value, not a container!
+     */
+    template <typename T>
+    std::string CheckDataType(const T data);
 
     /*!
      * \brief Opens the section
@@ -231,11 +239,24 @@ public:
 
     /*!
      * \brief Counts size of the data set in Bytes
-     * \note Class Data should be compatible with STL library
+     * \note Class Data should be compatible with STL library.
+     * \warning Class Data should return correct size of the internal data in Bytes when
+     * sizeof() is using. Otherwise, this method will return the wrong offset, which may
+     * lead to violation of data structure.
      * @param data Reference to the data set
      */
     template<typename Data>
     inline size_t CountOffset(Data &data);
+
+    /*!
+     * \brief Counts size of the grid in Bytes
+     * This method is a safe form of the CountOffset() one, since sizeof() for the grid structure
+     * may return wrong values sometimes (depends of a structure used to represent coordinates).
+     * \note Class Data should be compatible with STL library and contain a structure with .x member.
+     * @param data Reference to the data set
+     */
+    template<typename Data>
+    inline size_t CountOffsetGrid(Data &data);
 
     /*!
      * \brief Sets version of XML format
