@@ -102,11 +102,19 @@ public:
 
     /*!
      * \brief Opens the section
-     * @param Name of the section
+     * @param str Name of the section
      * @param stream Output stream
      */
     template<typename Stream>
     inline void OpenSection(std::string str, Stream &stream);
+
+    /*!
+     * \brief Opens and closes the section in one line
+     * @param str String to be written
+     * @param stream Output stream
+     */
+    template<typename Stream>
+    inline void OneLineSection(std::string str, Stream &stream);
 
     /*!
      * \brief Closes the section
@@ -129,6 +137,27 @@ public:
     inline void OpenDataArrSection(const std::string type, const std::string name,
             const size_t num_of_comp, const std::string format, const size_t offset,
             Stream &stream);
+
+    /*!
+     * \brief Opens 'PDataArray' section for binary output
+     * @param type Data type (Int32, Float32, ...)
+     * @param name The name of the data set
+     * @param num_of_comp Number of components in each element of data
+     * @param format Format of data (ascii, binary, appended)
+     * @param offset Offset for appended data
+     * @param stream Output stream
+     */
+    template<typename Stream>
+    inline void OpenPDataArrSection(const std::string type, const std::string name,
+            const size_t num_of_comp, const std::string format, const size_t offset,
+            Stream &stream);
+
+    /*!
+     * \brief Closes 'DataArray' section
+     * @param stream Output stream
+     */
+    template<typename Stream>
+    inline void ClosePDataArrSection(Stream &stream);
 
     /*!
      * \brief Opens 'DataArray' section for ASCII ouput
@@ -194,6 +223,21 @@ public:
      */
     template<typename Stream>
     inline void ClosePointDataSection(Stream &stream);
+
+    /*!
+     * \brief Opens 'PPointData' section
+     * @param name The name of the data set
+     * @param stream Output stream
+     */
+    template<typename Stream>
+    inline void OpenPPointDataSection(const std::string name, Stream &stream);
+
+    /*!
+     * \brief Closes 'PPointData' section
+     * @param stream Output stream
+     */
+    template<typename Stream>
+    inline void ClosePPointDataSection(Stream &stream);
 
     /*!
      * \brief Opens 'Coordinates' section

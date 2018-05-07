@@ -41,6 +41,13 @@ inline void VTK_XML_Writer::OpenSection(std::string str, Stream &stream) {
 }
 
 template<typename Stream>
+inline void VTK_XML_Writer::OneLineSection(std::string str, Stream &stream) {
+    str = indentation + "<" + str + "/>\n";
+    //indentation.append(2, ' ');
+    stream << str;
+}
+
+template<typename Stream>
 inline void VTK_XML_Writer::CloseSection(std::string str, Stream &stream) {
     //indentation.erase(indentation.length() - 2);
     str = indentation + "</" + str + ">\n";
@@ -58,6 +65,24 @@ inline void VTK_XML_Writer::OpenDataArrSection(const std::string type, const std
             + "\" offset=\"" + std::to_string(offset) + "\"" + ">\n";
     //indentation.append(2, ' ');
     stream << str;
+}
+
+template<typename Stream>
+inline void VTK_XML_Writer::OpenPDataArrSection(const std::string type, const std::string name,
+        const size_t num_of_comp, const std::string format, const size_t offset,
+        Stream &stream) {
+
+    std::string str;
+    str = indentation + "<PDataArray type=\"" + type + "\" Name=\"" + name
+            + "\" NumberOfComponents=\"" + std::to_string(num_of_comp) + "\" format=\"" + format
+            + "\" offset=\"" + std::to_string(offset) + "\"" + ">\n";
+    //indentation.append(2, ' ');
+    stream << str;
+}
+
+template<typename Stream>
+inline void VTK_XML_Writer::ClosePDataArrSection(Stream &stream) {
+    CloseSection("PDataArray", stream);
 }
 
 template<typename Stream>
@@ -116,6 +141,19 @@ inline void VTK_XML_Writer::OpenPointDataSection(const std::string name, Stream 
 template<typename Stream>
 inline void VTK_XML_Writer::ClosePointDataSection(Stream &stream) {
     CloseSection("PointData", stream);
+}
+
+template<typename Stream>
+inline void VTK_XML_Writer::OpenPPointDataSection(const std::string name, Stream &stream) {
+    std::string str;
+    str = indentation + "<PPointData Scalars=\"" + name + "\">\n";
+    //indentation.append(2, ' ');
+    stream << str;
+}
+
+template<typename Stream>
+inline void VTK_XML_Writer::ClosePPointDataSection(Stream &stream) {
+    CloseSection("PPointData", stream);
 }
 
 template<typename Stream>
