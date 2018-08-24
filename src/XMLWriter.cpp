@@ -169,7 +169,7 @@ void VTK_XML_Writer::TestStructuredOutput() {
     std::vector<float> data1, data2;
     int NI = 3;
     int NJ = 3;
-    int NK = 3;
+    int NK = 1;
     double L = 1.;
     double H = 1.;
     double D = 1.;
