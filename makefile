@@ -11,7 +11,7 @@ LANG = g++
 else ifeq ($(type),clang)
 LANG = clang
 else ifeq ($(type),$(filter $(type), intel mpi_intel))
-LANG=intel
+LANG=icpc
 else
 $(info )
 $(info *******************************************************************************)
