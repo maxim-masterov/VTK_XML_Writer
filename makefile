@@ -1,8 +1,25 @@
 # Remove directory
 RM := rm -rf
 
+# Compilation type
+type = gcc
 # Language to use
 LANG = g++
+
+ifeq ($(type),$(filter $(type), gcc mpi_gcc))
+LANG = g++
+else ifeq ($(type),clang)
+LANG = clang
+else ifeq ($(type),$(filter $(type), intel mpi_intel))
+LANG=intel
+else
+$(info )
+$(info *******************************************************************************)
+$(info *****************  Unknown compilation type: $(type))
+$(info *****************  Project will be compiled with the default compiler: $(LANG))
+$(info *******************************************************************************)
+$(info )
+endif
 
 # Flags
 FLAGS = -std=c++0x -O3 -Wall -c -fmessage-length=0 -DNDEBUG
