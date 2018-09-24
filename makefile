@@ -1,6 +1,15 @@
 # Remove directory
 RM := rm -rf
 
+#-include make.ini
+PATH_TO_MAKE_INI = ../../make.ini
+MAKE_INI_EXISTS = 0
+FLAGS =
+ifneq ("$(wildcard $(PATH_TO_MAKE_INI))","")
+MAKE_INI_EXISTS = 1
+include $(PATH_TO_MAKE_INI)
+endif
+
 # Compilation type
 type = gcc
 # Language to use
@@ -22,7 +31,7 @@ $(info )
 endif
 
 # Flags
-FLAGS = -std=c++0x -O3 -Wall -c -fmessage-length=0 -DNDEBUG
+FLAGS += -std=c++0x -O3 -Wall -c -fmessage-length=0 -DNDEBUG
 
 INCL = -I../FancyBear/FancyBear/
 
