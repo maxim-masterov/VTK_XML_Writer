@@ -1,5 +1,7 @@
 /************************************************************************************
  *                                                                                  *
+ * MIT License                                                                      *
+ *                                                                                  *
  * Copyright 2018 Maxim Masterov                                                    *
  *                                                                                  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy     *

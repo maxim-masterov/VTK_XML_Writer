@@ -1,5 +1,7 @@
 /************************************************************************************
  *                                                                                  *
+ * MIT License                                                                      *
+ *                                                                                  *
  * Copyright 2018 Maxim Masterov                                                    *
  *                                                                                  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy     *
@@ -28,7 +30,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-#include <FancyBear.h>
+//#include <FancyBear.h>
 
 namespace xmlw {
 
@@ -156,8 +158,13 @@ void VTK_XML_Writer::TestUntructuredOutput() {
     wxml.CloseVTKSection(os);
 
     os.close();
-//    <DataArray ... format="appended" offset="0"/>
-//    The value in the "offset" attribute is the file offset in bytes beyond the leading underscore. An offset of "0" means the first character after the underscore. Each DataArray's data are stored in a contiguous block. The block can be either compressed or uncompressed, but by default it is uncompressed (compression is global to the file and marked by an attribute on the VTKFile element).
+
+    data1.clear();
+    data2.clear();
+    points.clear();
+    cells.clear();
+    offsets.clear();
+    types.clear();
 }
 
 void VTK_XML_Writer::TestStructuredOutput() {
@@ -165,28 +172,29 @@ void VTK_XML_Writer::TestStructuredOutput() {
     std::ofstream os;
     std::ostringstream ostr;
     xmlw::VTK_XML_Writer wxml;
-    fb::variables<Coord> grid;
+    std::vector<Coord> grid;
     std::vector<float> data1, data2;
-    int NI = 3;
-    int NJ = 3;
-    int NK = 1;
+    uint32_t NI = 3;
+    uint32_t NJ = 3;
+    uint32_t NK = 1;
     double L = 1.;
     double H = 1.;
     double D = 1.;
     double dx = L / (NI-1);
     double dy = H / (NJ-1);
     double dz = D / (NK-1);
+    uint32_t size = NI * NJ * NK;
 
-    grid.allocate(NI,  NJ,  NK);
-    data1.resize(grid.size());
-    data2.resize(grid.size());
+    grid.resize(size);
+    data1.resize(size);
+    data2.resize(size);
     int n = 0;
-    for(fb::Index_t i = 0; i < grid.NI_init(); ++i) {
-        for(fb::Index_t j = 0; j < grid.NJ_init(); ++j) {
-            for(fb::Index_t k = 0; k < grid.NK_init(); ++k) {
-                grid(i, j, k).x = i * dx;
-                grid(i, j, k).y = j * dy;
-                grid(i, j, k).z = k * dz;
+    for(uint32_t i = 0; i < NI; ++i) {
+        for(uint32_t j = 0; j < NJ; ++j) {
+            for(uint32_t k = 0; k < NK; ++k) {
+                grid[n].x = i * dx;
+                grid[n].y = j * dy;
+                grid[n].z = k * dz;
                 data1[n] = i + j + k;
                 data2[n] = i * j * k;
                 ++n;
@@ -241,6 +249,10 @@ void VTK_XML_Writer::TestStructuredOutput() {
     wxml.CloseVTKSection(os);
 
     os.close();
+
+    grid.clear();
+    data1.clear();
+    data2.clear();
 }
 
 }
